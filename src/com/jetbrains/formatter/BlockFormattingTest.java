@@ -8,6 +8,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -17,7 +18,7 @@ import com.intellij.psi.codeStyle.JavaCodeStyleSettings;
 import com.intellij.psi.formatter.DocumentBasedFormattingModel;
 import com.intellij.psi.formatter.FormatterTestCase;
 import com.intellij.psi.formatter.FormattingDocumentModelImpl;
-import com.intellij.psi.formatter.java.AbstractJavaBlock;
+//import com.intellij.psi.formatter.java.AbstractJavaBlock;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.codeStyle.PsiBasedFormatterModelWithShiftIndentInside;
 import com.intellij.psi.impl.source.tree.FileElement;
@@ -31,7 +32,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-//import com.jetbrains.formatter.idea.IIIAbstractJavaBlock;
 
 public class BlockFormattingTest extends FormatterTestCase {
   @Override
@@ -58,9 +58,21 @@ public class BlockFormattingTest extends FormatterTestCase {
     return indentOptions;
   }
 
+  private void print_level(PsiElement file, int n) {
+    for (PsiElement elem : file.getChildren()) {
+      for (int i = 0; i < n; i++) {
+        System.out.print(" ");
+      }
+      System.out.println(elem);
+      for (int i = 0; i < n; i++) {
+        System.out.print(" ");
+      }
+      System.out.println("Text: '" + elem.getText() + "'");
+      print_level(elem, n + 2);
+    }
+  }
+
   public void testFormatTest() throws Exception {
-
-
     // From FormatterTestCase
     String fileNameBefore = this.getTestName(true) + "." + this.getFileExtension();
     String fileNameAfter = this.getTestName(true) + "_after." + this.getFileExtension();
@@ -72,6 +84,8 @@ public class BlockFormattingTest extends FormatterTestCase {
 
     String fileName = "before." + this.getFileExtension();
     PsiFile file = this.createFileFromText(text, fileName, PsiFileFactory.getInstance(getProject()));
+    print_level(file, 2);
+
 
     final Document document = PsiDocumentManager.getInstance(getProject()).getDocument(file);
 
@@ -93,7 +107,7 @@ public class BlockFormattingTest extends FormatterTestCase {
     List textRanges = ranges.getRanges();
 
     ////
-    AbstractJavaBlock r; // for ref
+    //AbstractJavaBlock r; // for ref
 
     FileElement fileElement = TreeUtil.getFileElement((TreeElement)SourceTreeToPsiMap.psiElementToTree(file));
     //LOG.assertTrue(fileElement != null, "File element should not be null for " + element);

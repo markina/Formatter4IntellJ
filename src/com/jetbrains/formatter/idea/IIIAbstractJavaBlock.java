@@ -175,10 +175,10 @@ public abstract class IIIAbstractJavaBlock extends AbstractBlock implements Java
       return new IIICodeBlockBlock(child, wrap, alignment, actualIndent, settings, javaSettings);
     }
     if (child.getElementType() == JavaElementType.METHOD) {
-      return new BlockContainingJavaBlock(child, actualIndent, alignmentStrategy, mySettings, myJavaSettings);
+      return new IIIBlockContainingJavaBlock(child, actualIndent, alignmentStrategy, mySettings, myJavaSettings);
     }
     if (isBlockType(elementType)) {
-      return new BlockContainingJavaBlock(child, wrap, alignment, actualIndent, settings, javaSettings);
+      return new IIIBlockContainingJavaBlock(child, wrap, alignment, actualIndent, settings, javaSettings);
     }
     if (isStatement(child, child.getTreeParent())) {
       return new IIICodeBlockBlock(child, wrap, alignment, actualIndent, settings, javaSettings);
@@ -487,8 +487,9 @@ public abstract class IIIAbstractJavaBlock extends AbstractBlock implements Java
     }
     else {
       IElementType nodeType = myNode.getElementType();
-      if (nodeType == JavaElementType.POLYADIC_EXPRESSION) nodeType = JavaElementType.BINARY_EXPRESSION;
-
+      if (nodeType == JavaElementType.POLYADIC_EXPRESSION) {
+        nodeType = JavaElementType.BINARY_EXPRESSION;
+      }
       if (childType == JavaTokenType.LBRACE && nodeType == JavaElementType.ARRAY_INITIALIZER_EXPRESSION) {
         ArrayInitializerBlocksBuilder builder = new ArrayInitializerBlocksBuilder(myNode, myBlockFactory);
         List<Block> newlyCreated = builder.buildBlocks();
@@ -573,7 +574,7 @@ public abstract class IIIAbstractJavaBlock extends AbstractBlock implements Java
 
         Block block = createJavaBlock(child, mySettings, myJavaSettings, childIndent, wrap, alignmentStrategyToUse, childOffset);
 
-        if (block instanceof AbstractJavaBlock) {
+        if (block instanceof IIIAbstractJavaBlock) {
           final IIIAbstractJavaBlock javaBlock = (IIIAbstractJavaBlock)block;
           if (nodeType == JavaElementType.METHOD_CALL_EXPRESSION && childType == JavaElementType.REFERENCE_EXPRESSION ||
               nodeType == JavaElementType.REFERENCE_EXPRESSION && childType == JavaElementType.METHOD_CALL_EXPRESSION) {
