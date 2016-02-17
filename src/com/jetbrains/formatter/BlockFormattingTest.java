@@ -8,7 +8,6 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -18,7 +17,6 @@ import com.intellij.psi.codeStyle.JavaCodeStyleSettings;
 import com.intellij.psi.formatter.DocumentBasedFormattingModel;
 import com.intellij.psi.formatter.FormatterTestCase;
 import com.intellij.psi.formatter.FormattingDocumentModelImpl;
-//import com.intellij.psi.formatter.java.AbstractJavaBlock;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.codeStyle.PsiBasedFormatterModelWithShiftIndentInside;
 import com.intellij.psi.impl.source.tree.FileElement;
@@ -31,7 +29,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 
 public class BlockFormattingTest extends FormatterTestCase {
   @Override
@@ -58,19 +55,6 @@ public class BlockFormattingTest extends FormatterTestCase {
     return indentOptions;
   }
 
-  private void print_level(PsiElement file, int n) {
-    for (PsiElement elem : file.getChildren()) {
-      for (int i = 0; i < n; i++) {
-        System.out.print(" ");
-      }
-      System.out.println(elem);
-      for (int i = 0; i < n; i++) {
-        System.out.print(" ");
-      }
-      System.out.println("Text: '" + elem.getText() + "'");
-      print_level(elem, n + 2);
-    }
-  }
 
   public void testFormatTest() throws Exception {
     // From FormatterTestCase
@@ -84,7 +68,7 @@ public class BlockFormattingTest extends FormatterTestCase {
 
     String fileName = "before." + this.getFileExtension();
     PsiFile file = this.createFileFromText(text, fileName, PsiFileFactory.getInstance(getProject()));
-    print_level(file, 2);
+    //print_level(file, 2);
 
 
     final Document document = PsiDocumentManager.getInstance(getProject()).getDocument(file);
@@ -113,35 +97,40 @@ public class BlockFormattingTest extends FormatterTestCase {
     //LOG.assertTrue(fileElement != null, "File element should not be null for " + element);
     CommonCodeStyleSettings commonSettings = mySettings.getCommonSettings(JavaLanguage.INSTANCE);
     JavaCodeStyleSettings customJavaSettings = (JavaCodeStyleSettings)mySettings.getCustomSettings(JavaCodeStyleSettings.class);
-    Block block = IIIAbstractJavaBlock.newJavaBlock(fileElement, commonSettings, customJavaSettings);
+    Block rootBlock = IIIAbstractJavaBlock.newJavaBlock(fileElement, commonSettings, customJavaSettings);
 
-    FormattingDocumentModelImpl model = FormattingDocumentModelImpl.createOn(file.getContainingFile());
+    Learning learning = new Learning();
+    learning.getLearningListInfo(rootBlock);
+    learning.printLearningList();
 
-    final DocumentBasedFormattingModel formattingModel
-        = new DocumentBasedFormattingModel(
-        new PsiBasedFormatterModelWithShiftIndentInside(file.getContainingFile(), block, model),
-        document, getProject(), mySettings, file.getFileType(), file);
+
+    //FormattingDocumentModelImpl model = FormattingDocumentModelImpl.createOn(file.getContainingFile());
+    //
+    //final DocumentBasedFormattingModel formattingModel
+    //    = new DocumentBasedFormattingModel(
+    //    new PsiBasedFormatterModelWithShiftIndentInside(file.getContainingFile(), rootBlock, model),
+    //    document, getProject(), mySettings, file.getFileType(), file);
 
     //DocumentBasedFormattingModel
     //    formattingModel =
     //    new DocumentBasedFormattingModel(new JavaFormattingModelBuilder().createModel(file, mySettings), document, getProject(), mySettings, file.getFileType(), file);
 
 
-    final FormatterEx formatterEx = FormatterEx.getInstanceEx();
-
-    CommonCodeStyleSettings.IndentOptions var31 = mySettings
-        .getIndentOptionsByFile(file, textRanges.size() == 1 ? ((FormatTextRanges.FormatTextRange)textRanges.get(0)).getTextRange() : null);
-
-    WriteCommandAction.runWriteCommandAction(getProject(), new Runnable() {
-      @Override
-      public void run() {
-        formatterEx.format(formattingModel, mySettings, var31, ranges, false);
-      }
-    });
-
-
-    assertEquals(textAfter, document.getText());
-    PsiDocumentManager.getInstance(getProject()).commitDocument(document);
-    assertEquals(textAfter, file.getText());
+    //final FormatterEx formatterEx = FormatterEx.getInstanceEx();
+    //
+    //CommonCodeStyleSettings.IndentOptions var31 = mySettings
+    //    .getIndentOptionsByFile(file, textRanges.size() == 1 ? ((FormatTextRanges.FormatTextRange)textRanges.get(0)).getTextRange() : null);
+    //
+    //WriteCommandAction.runWriteCommandAction(getProject(), new Runnable() {
+    //  @Override
+    //  public void run() {
+    //    formatterEx.format(formattingModel, mySettings, var31, ranges, false);
+    //  }
+    //});
+    //
+    //
+    //assertEquals(textAfter, document.getText());
+    //PsiDocumentManager.getInstance(getProject()).commitDocument(document);
+    //assertEquals(textAfter, file.getText());
   }
 }

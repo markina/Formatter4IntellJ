@@ -11,6 +11,7 @@ import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.impl.source.tree.JavaDocElementType;
 import com.intellij.psi.impl.source.tree.JavaElementType;
 import com.intellij.psi.impl.source.tree.StdTokenSets;
+import com.intellij.psi.impl.source.tree.java.JavaFileElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,12 @@ public class IIISimpleJavaBlock extends IIIAbstractJavaBlock {
                          CommonCodeStyleSettings settings,
                          JavaCodeStyleSettings javaSettings) {
     super(node, wrap, alignment, indent, settings, javaSettings);
+  }
+
+  @NotNull
+  @Override
+  public ASTNode getNode() {
+    return myNode;
   }
 
   @Override

@@ -37,10 +37,6 @@
   </project-components>
 
   <actions>
-    <action id="formatter.NewAction" class="com.jetbrains.formatter.Action" text="NewActionButton" description="New formatter for you">
-      <add-to-group group-id="MainMenu" anchor="after" relative-to-action="WindowMenu"/>
-      <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt K"/>
-    </action>
   </actions>
 
 </idea-plugin>
